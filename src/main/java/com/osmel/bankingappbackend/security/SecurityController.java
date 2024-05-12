@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
 public class SecurityController {
     @Autowired
     private AuthenticationManager authenticationManager;

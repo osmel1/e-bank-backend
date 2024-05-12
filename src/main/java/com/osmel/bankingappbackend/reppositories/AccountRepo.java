@@ -9,5 +9,5 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 public interface AccountRepo extends JpaRepository<Account,String> {
-
+    List<Account> findByCustomerId(Long customerId);
 }

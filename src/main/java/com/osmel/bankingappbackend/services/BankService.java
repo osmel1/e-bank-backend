@@ -50,6 +50,19 @@ public class BankService {
     }
 
     public void deleteCustomer(Long id){
+        Customer customer = customerRepo.findById(id).orElse(null);
+        if(customer == null){
+            throw  new RuntimeException("Customer not found");
+        }
+        List<Account> accounts = accountRepo.findByCustomerId(id);
+        accounts.forEach(
+                account -> {
+                    List<BankOperation> bankOperations = bankOperationRepo.findAllByAccount_Id(account.getId());
+bankOperationRepo.deleteAll(bankOperations);
+                }
+        );
+        accountRepo.deleteAll(accounts);
+
         customerRepo.deleteById(id);
     }
     public CurrentBankAccountDto saveAccount(double initialAmount , double overdraft , Long customerId){
@@ -179,5 +192,22 @@ public class BankService {
         accountHistDto.setPageSize(size);
         accountHistDto.setCurrentPage(page);
         return accountHistDto;
+    }
+
+    public List<CustomerDto> searchCustomer(String name) {
+        return customerRepo.findCustomerByNameContains(name).stream().map(
+                customer -> bankAccountMapper.fromCustomer(customer)
+        ).toList();
+    }
+    public List<BankAccountDto> searchAccountsByCustomerId(Long id){
+        return accountRepo.findByCustomerId(id).stream().map(
+                account -> {
+                    if(account instanceof CurrentAccount){
+                        return bankAccountMapper.fromCurrentAccount((CurrentAccount) account);
+                    }else{
+                        return bankAccountMapper.fromSavingAccount((SavingAccount) account);
+                    }
+                }
+        ).toList();
     }
 }

@@ -25,7 +25,9 @@ public class BankingAppBackendApplication {
         SpringApplication.run(BankingAppBackendApplication.class, args);
     }
 
-    //@Bean
+
+
+    @Bean
     CommandLineRunner commandLineRunner(CustomerRepo customerRepo, AccountRepo accountRepo, BankOperationRepo bankOperationRepo, BankService bankService){
       return args -> {
           Stream.of("Oussama","Hatim" ,"Omar" ,"Abdelali" , "Amine").forEach(
@@ -73,7 +75,10 @@ public class BankingAppBackendApplication {
                   }
           );
 
+
+
       };
     };
+
 
 }
